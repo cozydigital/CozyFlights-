@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CozyFlights Travels — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#08131F;--navy2:#0f2035;--gold:#D4A843;--white:#fff;--text:#C8D6E5;--muted:#7A90A8}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);min-height:100vh}
+header{background:var(--navy2);border-bottom:1px solid rgba(212,168,67,.18);padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:1.2rem;font-weight:600;color:var(--gold)}.logo span{color:var(--white)}
+.badge{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;background:rgba(212,168,67,.12);color:var(--gold);border:1px solid rgba(212,168,67,.25);padding:.3rem .8rem;border-radius:2rem}
+.wrap{padding:2rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.9rem;margin-bottom:2.2rem}
+.stat{background:var(--navy2);border:1px solid rgba(212,168,67,.12);border-radius:.8rem;padding:1.1rem 1.3rem}
+.stat-n{font-size:1.9rem;font-weight:500;color:var(--gold);line-height:1}
+.stat-l{font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:.3rem}
+.tabs{display:flex;gap:.45rem;margin-bottom:1.4rem;flex-wrap:wrap}
+.tab{padding:.5rem 1.2rem;border-radius:2rem;font-size:.78rem;cursor:pointer;border:1px solid rgba(212,168,67,.25);color:var(--muted);background:transparent;font-family:'Outfit',sans-serif;transition:all .2s}
+.tab.active,.tab:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);font-weight:600}
+.panel{display:none}.panel.active{display:block}
+.toolbar{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;flex-wrap:wrap}
+.si{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.5rem;padding:.5rem .9rem;color:var(--white);font-family:'Outfit',sans-serif;font-size:.84rem;outline:none;min-width:200px;transition:border-color .2s}
+.si:focus,.si:hover{border-color:var(--gold)}
+.si::placeholder{color:var(--muted)}
+.si option{background:var(--navy2)}
+.cnt{font-size:.8rem;color:var(--muted);margin-left:auto}
+.ref-btn{background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.28);color:var(--gold);border-radius:.5rem;padding:.5rem 1.1rem;font-family:'Outfit',sans-serif;font-size:.78rem;cursor:pointer;transition:background .2s}
+.ref-btn:hover{background:rgba(212,168,67,.22)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+thead th{text-align:left;font-size:.66rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:.55rem .9rem;border-bottom:1px solid rgba(255,255,255,.07)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.045);transition:background .15s}
+tbody tr:hover{background:rgba(255,255,255,.028)}
+td{padding:.7rem .9rem;vertical-align:middle;color:var(--text)}
+td.nm{font-weight:500;color:var(--white)}
+.pill{display:inline-block;font-size:.68rem;font-weight:600;padding:.22rem .65rem;border-radius:2rem}
+.pill-pending{background:rgba(212,168,67,.18);color:#f0c040}
+.pill-confirmed{background:rgba(26,122,74,.18);color:#6ee7b7}
+.pill-cancelled{background:rgba(200,75,49,.18);color:#fca5a5}
+.ab{background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:.4rem;padding:.28rem .65rem;font-size:.72rem;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;margin-right:.25rem}
+.ab:hover{border-color:var(--gold);color:var(--gold)}
+.ab.ok:hover{border-color:#6ee7b7;color:#6ee7b7}
+.ab.no:hover{border-color:#fca5a5;color:#fca5a5}
+.empty{text-align:center;padding:2.5rem;color:var(--muted);font-size:.88rem}
+.loading{text-align:center;padding:2.5rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Cozy<span>Flights</span> Travels <span style="font-size:.75rem;color:var(--muted);font-weight:300">/ Admin</span></div>
+  <span class="badge">Booking Management</span>
+</header>
+<div class="wrap">
+  <div class="stats" id="stats">
+    <div class="stat"><div class="stat-n" id="st-total">—</div><div class="stat-l">Total</div></div>
+    <div class="stat"><div class="stat-n" id="st-pending" style="color:#f0c040">—</div><div class="stat-l">Pending</div></div>
+    <div class="stat"><div class="stat-n" id="st-confirmed" style="color:#6ee7b7">—</div><div class="stat-l">Confirmed</div></div>
+    <div class="stat"><div class="stat-n" id="st-flights">—</div><div class="stat-l">Flights</div></div>
+    <div class="stat"><div class="stat-n" id="st-hotels">—</div><div class="stat-l">Hotels</div></div>
+    <div class="stat"><div class="stat-n" id="st-transfers">—</div><div class="stat-l">Transfers</div></div>
+    <div class="stat"><div class="stat-n" id="st-tours">—</div><div class="stat-l">Tours</div></div>
+    <div class="stat"><div class="stat-n" id="st-passports">—</div><div class="stat-l">Passport</div></div>
+    <div class="stat"><div class="stat-n" id="st-cargo">—</div><div class="stat-l">Cargo</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showP('flights',this)">✈ Flights</button>
+    <button class="tab" onclick="showP('hotels',this)">🏨 Hotels</button>
+    <button class="tab" onclick="showP('transfers',this)">🚐 Transfers</button>
+    <button class="tab" onclick="showP('tours',this)">🗺️ Tours</button>
+    <button class="tab" onclick="showP('passports',this)">📘 Passports</button>
+    <button class="tab" onclick="showP('cargo',this)">📦 Cargo</button>
+  </div>
+  <div id="panel-flights" class="panel active"></div>
+  <div id="panel-hotels" class="panel"></div>
+  <div id="panel-transfers" class="panel"></div>
+  <div id="panel-tours" class="panel"></div>
+  <div id="panel-passports" class="panel"></div>
+  <div id="panel-cargo" class="panel"></div>
+</div>
+<script>
+let D={};
+const TABLES={flights:'flight_bookings',hotels:'hotel_bookings',transfers:'transfer_bookings',tours:'tour_bookings',passports:'passport_bookings',cargo:'cargo_bookings'};
+const COLS={
+  flights:['ID','Name','Email','Phone','Type','From','To','Depart','Return','Pax','Class','Status','Date','Actions'],
+  hotels:['ID','Name','Email','Phone','Destination','Check-in','Check-out','Rooms','Guests','Room','Budget','Status','Date','Actions'],
+  transfers:['ID','Name','Email','Phone','Type','Pickup','Drop-off','Date','Time','Pax','Vehicle','Flight#','Status','Created','Actions'],
+  tours:['ID','Name','Email','Phone','Tour Type','Destination','Travel Date','Days','Pax','Budget','Status','Date','Actions'],
+  passports:['ID','Name','Email','Phone','Request','Booklet','Urgency','DOB','State','Old Passport#','Status','Date','Actions'],
+  cargo:['ID','Name','Email','Phone','Service','Origin','Destination','Pickup','Type','kg','Dims','Fragile','Status','Date','Actions'],
+};
+const FIELDS={
+  flights:r=>[r.id,r.full_name,r.email,r.phone,r.trip_type,r.from_city,r.to_city,r.departure_date,r.return_date||'—',r.passengers,r.cabin_class],
+  hotels:r=>[r.id,r.full_name,r.email,r.phone,r.destination,r.check_in,r.check_out,r.rooms,r.guests,r.room_type,r.budget_range],
+  transfers:r=>[r.id,r.full_name,r.email,r.phone,r.transfer_type,r.pickup_location,r.dropoff_location,r.pickup_date,r.pickup_time,r.passengers,r.vehicle_type,r.flight_number||'—'],
+  tours:r=>[r.id,r.full_name,r.email,r.phone,r.tour_type,r.destination,r.travel_date,r.duration_days||'—',r.passengers,r.budget_range],
+  passports:r=>[r.id,r.full_name,r.email,r.phone,r.request_type,r.booklet_type,r.urgency,r.date_of_birth||'—',r.state_of_origin||'—',r.old_passport_no||'—'],
+  cargo:r=>[r.id,r.full_name,r.email,r.phone,r.service_type,r.origin,r.destination,r.pickup_date,r.cargo_type,r.weight_kg,r.dimensions||'—',r.fragile?'Yes':'No'],
+};
+async function load(){
+  document.querySelectorAll('.panel').forEach(p=>p.innerHTML='<div class="loading">Loading…</div>');
+  try{
+    const res=await fetch('/api/admin/bookings');D=await res.json();
+    updateStats();['flights','hotels','transfers','tours','passports','cargo'].forEach(renderPanel);
+  }catch(e){document.querySelectorAll('.panel').forEach(p=>p.innerHTML='<div class="empty">⚠️ Cannot connect to server.</div>')}
+}
+function updateStats(){
+  const fl=D.flight_bookings||[],ht=D.hotel_bookings||[],tr=D.transfer_bookings||[],to=D.tour_bookings||[],pp=D.passport_bookings||[],cg=D.cargo_bookings||[];
+  const all=[...fl,...ht,...tr,...to,...pp,...cg];
+  document.getElementById('st-total').textContent=all.length;
+  document.getElementById('st-pending').textContent=all.filter(b=>b.status==='pending').length;
+  document.getElementById('st-confirmed').textContent=all.filter(b=>b.status==='confirmed').length;
+  document.getElementById('st-flights').textContent=fl.length;
+  document.getElementById('st-hotels').textContent=ht.length;
+  document.getElementById('st-transfers').textContent=tr.length;
+  document.getElementById('st-tours').textContent=to.length;
+  document.getElementById('st-passports').textContent=pp.length;
+  document.getElementById('st-cargo').textContent=cg.length;
+}
+function pill(s){return`<span class="pill pill-${s}">${s}</span>`}
+function renderPanel(type){
+  const tbl=TABLES[type];const rows=D[tbl]||[];const panel=document.getElementById('panel-'+type);
+  let html=`<div class="toolbar">
+    <input class="si" type="text" placeholder="Search…" oninput="filter('${type}',this.value,document.getElementById('flt-${type}').value)">
+    <select class="si" id="flt-${type}" onchange="filter('${type}',document.querySelector('#panel-${type} .si').value,this.value)">
+      <option value="">All Status</option><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option>
+    </select>
+    <button class="ref-btn" onclick="load()">↻ Refresh</button>
+    <span class="cnt" id="cnt-${type}">${rows.length} bookings</span>
+  </div><div class="tbl-wrap"><table id="tbl-${type}">
+    <thead><tr>${COLS[type].map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+  if(!rows.length){html+=`<tr><td colspan="${COLS[type].length}" class="empty">No bookings yet.</td></tr>`}
+  else rows.forEach(r=>{
+    const fs=FIELDS[type](r);
+    html+=`<tr data-status="${r.status}" data-search="${Object.values(r).join(' ').toLowerCase()}">`;
+    fs.forEach((f,i)=>html+=`<td${i===1?' class="nm"':''}>${f}</td>`);
+    html+=`<td>${pill(r.status)}</td><td>${(r.created_at||'').split('T')[0]}</td><td>
+      <button class="ab ok" onclick="upd('${tbl}',${r.id},'confirmed')">✓ Confirm</button>
+      <button class="ab no" onclick="upd('${tbl}',${r.id},'cancelled')">✕ Cancel</button>
+    </td></tr>`;
+  });
+  html+=`</tbody></table></div>`;panel.innerHTML=html;
+}
+function filter(type,search,status){
+  const rows=document.querySelectorAll(`#tbl-${type} tbody tr`);let v=0;
+  rows.forEach(row=>{const ok=(!search||row.dataset.search.includes(search.toLowerCase()))&&(!status||row.dataset.status===status);row.style.display=ok?'':'none';if(ok)v++});
+  const c=document.getElementById('cnt-'+type);if(c)c.textContent=v+' booking'+(v===1?'':'s');
+}
+async function upd(tbl,id,status){
+  try{const r=await fetch(`/api/admin/bookings/${tbl}/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});const d=await r.json();if(d.success)load()}catch(e){alert('Failed to update.')}
+}
+function showP(name,btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');document.getElementById('panel-'+name).classList.add('active');
+}
+load();setInterval(load,30000);
+</script>
+</body>
+</html>

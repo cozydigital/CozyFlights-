@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CozyFlights Travels — Fly, Stay & Move</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#D4A843;--gold2:#f0c96a;--gold-dim:rgba(212,168,67,.15);
+  --navy:#08131F;--navy2:#0f2035;--navy3:#172e4a;
+  --cream:#FBF8F3;--text:#C8D6E5;--muted:#7A90A8;--white:#fff;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+
+/* ── NAV ── */
+nav{position:fixed;inset:0 0 auto;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1rem 5%;background:rgba(8,19,31,.93);backdrop-filter:blur(14px);border-bottom:1px solid rgba(212,168,67,.12)}
+.logo-wrap{display:flex;align-items:center;gap:.7rem}
+.logo-icon{width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700;line-height:1}
+.logo-text span{color:var(--gold)}
+.logo-sub{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.1rem}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{color:var(--text);font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{background:var(--gold);color:var(--navy)!important;padding:.5rem 1.4rem;border-radius:2rem;font-weight:600!important}
+.nav-cta:hover{background:var(--gold2)!important}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.ham span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:8rem 5% 5rem;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(8,19,31,.88) 0%,rgba(8,19,31,.65) 55%,rgba(8,19,31,.3) 100%)}
+.hero-content{position:relative;z-index:1;max-width:700px}
+.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.35);color:var(--gold);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:.4rem 1rem;border-radius:2rem;margin-bottom:2rem}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3.2rem,7vw,5.8rem);line-height:1;font-weight:700;margin-bottom:1.5rem}
+h1 .accent{color:var(--gold);font-style:italic;display:block}
+.hero-desc{font-size:1.05rem;color:var(--text);line-height:1.75;max-width:500px;font-weight:300;margin-bottom:2.5rem}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:500;border-radius:3rem;transition:all .22s}
+.btn-gold{background:var(--gold);color:var(--navy);padding:.85rem 2rem}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-2px)}
+.btn-ghost{border:1px solid rgba(255,255,255,.28);color:var(--white);padding:.85rem 2rem}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:2.5rem;margin-top:3.5rem;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.1);flex-wrap:wrap}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;color:var(--gold);line-height:1}
+.stat-l{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:.25rem}
+
+/* ── BOOKING SECTION ── */
+.book-section{padding:5rem 5%;background:var(--navy2)}
+.sec-label{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
+h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,4vw,2.8rem);font-weight:700;line-height:1.15;margin-bottom:.8rem}
+.sec-sub{color:var(--muted);font-size:.95rem;line-height:1.7;max-width:480px;margin-bottom:2.5rem}
+.btabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem}
+.btab{padding:.55rem 1.3rem;border-radius:2rem;font-size:.8rem;letter-spacing:.04em;cursor:pointer;border:1px solid rgba(212,168,67,.28);color:var(--muted);background:transparent;font-family:'Outfit',sans-serif;transition:all .2s;display:flex;align-items:center;gap:.4rem}
+.btab.active,.btab:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);font-weight:600}
+.bform{display:none;animation:fadeIn .3s ease}.bform.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.1rem;margin-bottom:1.2rem}
+.fg.full{grid-template-columns:1fr}
+.fgroup{display:flex;flex-direction:column;gap:.35rem}
+.fgroup label{font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.fgroup input,.fgroup select,.fgroup textarea{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.55rem;padding:.7rem .95rem;color:var(--white);font-family:'Outfit',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;width:100%}
+.fgroup input::placeholder,.fgroup textarea::placeholder{color:var(--muted)}
+.fgroup input:focus,.fgroup select:focus,.fgroup textarea:focus{border-color:var(--gold)}
+.fgroup select option{background:var(--navy2)}
+.fgroup textarea{resize:vertical;min-height:88px}
+.fdiv{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid rgba(212,168,67,.18);padding-bottom:.45rem;margin:1.4rem 0 1.1rem}
+.chk-row{display:flex;align-items:center;gap:.7rem;padding:.4rem 0}
+.chk-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--gold);cursor:pointer}
+.chk-row label{font-size:.86rem;color:var(--text);cursor:pointer}
+.sub-row{display:flex;align-items:center;gap:1.5rem;margin-top:1.4rem;flex-wrap:wrap}
+.sub-btn{background:var(--gold);color:var(--navy);border:none;border-radius:3rem;padding:.9rem 2.5rem;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.5rem}
+.sub-btn:hover{background:var(--gold2);transform:translateY(-2px)}
+.sub-btn:disabled{background:#555;cursor:not-allowed;transform:none}
+.fnote{font-size:.78rem;color:var(--muted);line-height:1.55}
+.alert{display:none;padding:.95rem 1.4rem;border-radius:.7rem;font-size:.88rem;margin-top:1rem;line-height:1.6}
+.alert.success{background:rgba(26,122,74,.18);border:1px solid rgba(26,122,74,.35);color:#6ee7b7;display:block}
+.alert.error{background:rgba(200,75,49,.18);border:1px solid rgba(200,75,49,.35);color:#fca5a5;display:block}
+.ref{font-family:monospace;background:rgba(212,168,67,.15);color:var(--gold);padding:.18rem .55rem;border-radius:.3rem;font-size:.85rem;margin-top:.3rem;display:inline-block}
+
+/* ── SERVICES ── */
+.services-section{padding:6rem 5%}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:3rem}
+.svc-card{border-radius:1.1rem;overflow:hidden;background:var(--navy2);border:1px solid rgba(212,168,67,.1);transition:transform .3s,border-color .3s;cursor:default}
+.svc-card:hover{transform:translateY(-6px);border-color:rgba(212,168,67,.4)}
+.svc-img{height:200px;overflow:hidden;position:relative}
+.svc-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.svc-card:hover .svc-img img{transform:scale(1.07)}
+.svc-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(8,19,31,.7) 100%)}
+.svc-badge{position:absolute;top:.9rem;left:.9rem;background:var(--gold);color:var(--navy);font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.3rem .75rem;border-radius:2rem}
+.svc-body{padding:1.4rem 1.6rem 1.7rem}
+.svc-icon{font-size:1.5rem;margin-bottom:.7rem;display:block}
+.svc-body h3{font-size:1.05rem;font-weight:600;color:var(--white);margin-bottom:.55rem}
+.svc-body p{font-size:.84rem;color:var(--muted);line-height:1.65}
+.svc-link{display:inline-flex;align-items:center;gap:.4rem;margin-top:1rem;font-size:.78rem;color:var(--gold);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:gap .2s}
+.svc-link:hover{gap:.7rem}
+
+/* ── DESTINATIONS ── */
+.dest-section{padding:6rem 5%;background:var(--navy2)}
+.dest-mosaic{display:grid;grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:260px 260px;gap:1rem;margin-top:3rem}
+.dest-tile{border-radius:1rem;overflow:hidden;position:relative;cursor:pointer}
+.dest-tile img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.dest-tile:hover img{transform:scale(1.08)}
+.dest-tile.tall{grid-row:span 2}
+.dest-info{position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(8,19,31,.92) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.4rem}
+.dest-city{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:700}
+.dest-ctry{font-size:.75rem;color:var(--muted);margin-top:.15rem}
+.dest-price{position:absolute;top:.9rem;right:.9rem;background:var(--gold);color:var(--navy);font-size:.72rem;font-weight:600;padding:.3rem .75rem;border-radius:2rem}
+
+/* ── WHY ── */
+.why-section{padding:6rem 5%}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;text-align:center;margin-top:3rem}
+.why-card{padding:2rem 1.5rem;background:var(--navy2);border-radius:1rem;border:1px solid rgba(212,168,67,.1);transition:border-color .3s}
+.why-card:hover{border-color:rgba(212,168,67,.35)}
+.why-icon{font-size:2.2rem;margin-bottom:1rem;display:block}
+.why-card h4{font-size:.95rem;font-weight:600;margin-bottom:.5rem}
+.why-card p{font-size:.82rem;color:var(--muted);line-height:1.65}
+
+/* ── REVIEWS ── */
+.reviews-section{padding:6rem 5%;background:var(--cream);color:var(--navy)}
+.reviews-section .sec-label{color:var(--gold)}
+.reviews-section h2,.reviews-section .sec-sub{color:var(--navy)}
+.reviews-section .sec-sub{color:#6B7280}
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.4rem;margin-top:2.5rem}
+.rev-card{background:#fff;border-radius:1rem;padding:1.7rem;border:1px solid rgba(0,0,0,.07);transition:transform .2s}
+.rev-card:hover{transform:translateY(-4px)}
+.stars{color:var(--gold);font-size:.88rem;margin-bottom:.9rem;letter-spacing:.08em}
+.rev-text{font-size:.88rem;color:#374151;line-height:1.7;margin-bottom:1.1rem}
+.reviewer{display:flex;align-items:center;gap:.75rem}
+.avi{width:40px;height:40px;border-radius:50%;background:#F5E6C8;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.82rem;color:#8A6420;flex-shrink:0}
+.rev-name{font-size:.85rem;font-weight:600;color:var(--navy)}
+.rev-meta{font-size:.72rem;color:#9CA3AF}
+
+/* ── CTA ── */
+.cta-section{padding:6rem 5%;text-align:center;border-top:1px solid rgba(212,168,67,.12)}
+.cta-section h2{font-size:clamp(2rem,5vw,3.2rem);margin-bottom:1rem}
+.cta-section p{color:var(--muted);margin-bottom:2.5rem;font-size:.95rem}
+.cta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;margin-top:3rem;max-width:800px;margin-left:auto;margin-right:auto}
+.cta-item{background:var(--navy2);border:1px solid rgba(212,168,67,.15);border-radius:.9rem;padding:1.4rem 1.2rem;display:flex;align-items:flex-start;gap:.8rem;text-align:left}
+.cta-item-icon{font-size:1.4rem;flex-shrink:0;margin-top:.1rem}
+.cta-item-label{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem}
+.cta-item-val{font-size:.88rem;font-weight:500;color:var(--white);word-break:break-word}
+.cta-item-val a{color:var(--gold);text-decoration:none}
+.cta-item-val a:hover{text-decoration:underline}
+
+/* ── FOOTER ── */
+footer{background:#050e18;padding:3.5rem 5% 2rem;border-top:1px solid rgba(212,168,67,.08)}
+.ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.ft-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:.8rem}
+.ft-logo span{color:var(--white)}
+.ft-desc{font-size:.82rem;color:var(--muted);line-height:1.7;max-width:230px}
+.ft-col h5{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text);margin-bottom:1.1rem}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:.65rem}
+.ft-col ul a{font-size:.82rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.ft-col ul a:hover{color:var(--gold)}
+.ft-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:1.4rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-size:.75rem;color:var(--muted)}
+.socials{display:flex;gap:.7rem}
+.soc{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;font-size:.72rem;font-weight:600;transition:all .2s;letter-spacing:0}
+.soc:hover{border-color:var(--gold);color:var(--gold)}
+
+@keyframes riseUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.hero-content>*{animation:riseUp .85s ease both}
+.hero-pill{animation-delay:.1s}h1{animation-delay:.22s}.hero-desc{animation-delay:.38s}.hero-actions{animation-delay:.52s}.hero-stats{animation-delay:.66s}
+
+@media(max-width:900px){
+  .dest-mosaic{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .dest-tile.tall{grid-row:span 1}
+  .ft-grid{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+  .ham{display:flex}
+}
+@media(max-width:600px){
+  .ft-grid{grid-template-columns:1fr}
+  .hero-stats{gap:1.5rem}
+  .dest-mosaic{grid-template-columns:1fr}
+  .svc-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo-wrap">
+    <div class="logo-icon">✈</div>
+    <div>
+      <div class="logo-text">Cozy<span>Flights</span></div>
+      <div class="logo-sub">Travels</div>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#destinations">Destinations</a></li>
+    <li><a href="#book">Book Now</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="/admin" class="nav-cta">Admin</a></li>
+  </ul>
+  <div class="ham" onclick="toggleMenu(this)">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1800&q=80" alt="Travel">
+  </div>
+  <div class="hero-content">
+    <span class="hero-pill">✦ Lagos, Nigeria's Trusted Travel Agency</span>
+    <h1>
+      Your World,
+      <span class="accent">Your Journey.</span>
+    </h1>
+    <p class="hero-desc">Flights, hotels, airport transfers, tour packages, passport services, and cargo logistics — everything handled with warmth and precision.</p>
+    <div class="hero-actions">
+      <a href="#book" class="btn btn-gold">✈ Book a Service</a>
+      <a href="#services" class="btn btn-ghost">Our Services →</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-n">50K+</div><div class="stat-l">Happy Travelers</div></div>
+      <div><div class="stat-n">120+</div><div class="stat-l">Destinations</div></div>
+      <div><div class="stat-n">12</div><div class="stat-l">Years Operating</div></div>
+      <div><div class="stat-n">24/7</div><div class="stat-l">Support</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ SERVICES ══════ -->
+<section class="services-section" id="services">
+  <p class="sec-label">What We Offer</p>
+  <h2>All Our Services</h2>
+  <p class="sec-sub">Everything you need for seamless travel and logistics — under one roof, with one team you can trust.</p>
+
+  <div class="svc-grid">
+
+    <!-- Domestic Flights -->
+    <div class="svc-card">
+      <div class="svc-img">
+        <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=700&q=80" alt="Domestic Flights">
+        <div class="svc-img-overlay"></div>
+        <span class="svc-badge">Local</span>
+      </div>
+      <div class="svc-body">
+        <span class="svc-icon">✈</span>
+        <h3>Domestic Flights</h3>
+        <p>Best-priced tickets on all Nigerian carriers — Lagos, Abuja, Port Harcourt, Kano, and more. Same-day bookings available.</p>
+        <span class="svc-link" onclick="openTab('flight')">Book now →</span>
+      </div>
+    </div>
+
+    <!-- International Flights -->
+    <div class="svc-card">
+      <div class="svc-img">
+        <img src="https://images.unsplash.com/photo-1569154941061-e231b4725ef1?w=700&q=80" alt="International Flights">
+        <div class="svc-img-overlay"></div>
+        <span class="svc-badge">International</span>
+      </div>
+      <div class="svc-body">
+        <span class="svc-icon">🌍</span>
+        <h3>International Flights</h3>
+        <p>Economy, business and first-class tickets to the UK, USA, UAE, Turkey, Canada and 100+ global destinations at the best rates.</p>
+        <span class="svc-link" onclick="openTab('flight')">Book now →</span>
+      </div>
+    </div>
+
+    <!-- Hotel Reservations -->
+    <div class="svc-card">
+      <div class="svc-img">
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=80" alt="Hotel Reservations">
+        <div class="svc-img-overlay"></div>
+        <span class="svc-badge">Accommodation</span>
+      </div>
+      <div class="svc-body">
+        <span class="svc-icon">🏨</span>
+        <h3>Hotel Reservations</h3>
+        <p>From cozy guesthouses to five-star resorts worldwide. Instant confirmation, flexible bookings and the best available rates.</p>
+        <span class="svc-link" onclick="openTab('hotel')">Book now →</span>
+      </div>
+    </div>
+
+    <!-- Airport Transfers -->
+    <div class="svc-card">
+      <div class="svc-img">
+        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=700&q=80" alt="Airport Transfer">
+        <div class="svc-img-overlay"></div>
+        <span class="svc-badge">Transfers</span>
+      </div>
+      <div class="svc-body">
+        <span class="svc-icon">🚐</span>
+        <h3>Airport Pick-up & Drop-off</h3>
+        <p>Punctual, air-conditioned vehicles ready to collect or deliver you at any Lagos, Abuja, Port Harcourt or Kano airport — any time of day.</p>
+        <span class="svc-link" onclick="openTab('transfer')">Book now →</span>
+      </div>
+    </div>
+
+    <!-- Tour Packages -->
+    <div class="svc-card">
+      <div class="svc-img">
+        <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=700&q=80" alt="Tour Packages">
+        <div class="svc-img-overlay"></div>
+        <span class="svc-badge">Tours</span>
+      </div>
+      <div class="svc-body">
+        <span class="svc-icon">🗺️</span>
+        <h3>Tour Packages</h3>
+        <p>All-inclusive local and international tour packages — flights, hotels, guided experiences and transfers all bundled into one seamless trip.</p>
+        <span class="svc-link" onclick="openTab('tour')">Book now →</span>
+      </div>
+    </div>
+
+    <!-- Passport Application -->
+    <div class="svc-card">
+      <div class="svc-img">
+        <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=700&q=80" alt="Passport Application">
+        <div class="svc-img-overlay"></div>
+        <span class="svc-badge">Documents</span>
+      </div>
+      <div class="svc-body">
+        <span class="svc-icon">📘</span>
+        <h3>Passport Application Assistance</h3>
+        <p>Stressed about your passport? We guide you step-by-step through the NIS application process — new passports, renewals and corrections.</p>
+        <span class="svc-link" onclick="openTab('passport')">Get help →</span>
+      </div>
+    </div>
+
+    <!-- Local Logistics -->
+    <div class="svc-card">
+      <div class="svc-img">
+        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=700&q=80" alt="Local Logistics">
+        <div class="svc-img-overlay"></div>
+        <span class="svc-badge">Logistics</span>
+      </div>
+      <div class="svc-body">
+        <span class="svc-icon">📦</span>
+        <h3>Local Logistics & Delivery</h3>
+        <p>Same-city and inter-state cargo delivery across all 36 states and FCT. Track your shipment in real time with our dedicated team.</p>
+        <span class="svc-link" onclick="openTab('cargo')">Book now →</span>
+      </div>
+    </div>
+
+    <!-- International Freight -->
+    <div class="svc-card">
+      <div class="svc-img">
+        <img src="https://images.unsplash.com/photo-1605745341112-85968b19335b?w=700&q=80" alt="International Freight">
+        <div class="svc-img-overlay"></div>
+        <span class="svc-badge">Freight</span>
+      </div>
+      <div class="svc-body">
+        <span class="svc-icon">🚢</span>
+        <h3>International Freight</h3>
+        <p>Air and sea freight to the UK, USA, China, UAE and beyond. We handle customs documentation and door-to-door delivery at no extra charge.</p>
+        <span class="svc-link" onclick="openTab('cargo')">Book now →</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════ BOOKING SECTION ══════ -->
+<section class="book-section" id="book">
+  <p class="sec-label">Make a Booking</p>
+  <h2>Book Any Service</h2>
+  <p class="sec-sub">Fill in your details and our team will confirm your booking within 30 minutes.</p>
+
+  <div class="btabs">
+    <button class="btab active" onclick="switchTab('flight',this)">✈ Flights</button>
+    <button class="btab" onclick="switchTab('hotel',this)">🏨 Hotels</button>
+    <button class="btab" onclick="switchTab('transfer',this)">🚐 Transfers</button>
+    <button class="btab" onclick="switchTab('tour',this)">🗺️ Tours</button>
+    <button class="btab" onclick="switchTab('passport',this)">📘 Passport</button>
+    <button class="btab" onclick="switchTab('cargo',this)">📦 Cargo</button>
+  </div>
+
+  <!-- FLIGHT -->
+  <div id="form-flight" class="bform active">
+    <div class="fdiv">Personal Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Full Name *</label><input type="text" id="fl-name" placeholder="e.g. Chidinma Okafor"></div>
+      <div class="fgroup"><label>Email Address *</label><input type="email" id="fl-email" placeholder="you@example.com"></div>
+      <div class="fgroup"><label>Phone Number *</label><input type="tel" id="fl-phone" placeholder="+234 800 000 0000"></div>
+    </div>
+    <div class="fdiv">Flight Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Trip Type *</label><select id="fl-triptype"><option value="one-way">One Way</option><option value="return" selected>Return</option><option value="multi-city">Multi-City</option></select></div>
+      <div class="fgroup"><label>From *</label><input type="text" id="fl-from" placeholder="Lagos (LOS)"></div>
+      <div class="fgroup"><label>To *</label><input type="text" id="fl-to" placeholder="London (LHR)"></div>
+    </div>
+    <div class="fg">
+      <div class="fgroup"><label>Departure Date *</label><input type="date" id="fl-dep"></div>
+      <div class="fgroup"><label>Return Date</label><input type="date" id="fl-ret"></div>
+      <div class="fgroup"><label>Passengers *</label><select id="fl-pax"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5+">5+</option></select></div>
+      <div class="fgroup"><label>Cabin Class *</label><select id="fl-cabin"><option value="economy">Economy</option><option value="premium_economy">Premium Economy</option><option value="business">Business</option><option value="first">First Class</option></select></div>
+    </div>
+    <div class="fg full"><div class="fgroup"><label>Special Requests</label><textarea id="fl-notes" placeholder="Dietary needs, wheelchair assistance, preferred airline…"></textarea></div></div>
+    <div class="sub-row"><button class="sub-btn" onclick="submitBooking('flight')">Submit Request →</button><p class="fnote">Confirmation within 30 minutes<br>via email & WhatsApp.</p></div>
+    <div id="fl-alert" class="alert"></div>
+  </div>
+
+  <!-- HOTEL -->
+  <div id="form-hotel" class="bform">
+    <div class="fdiv">Personal Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Full Name *</label><input type="text" id="ht-name" placeholder="e.g. Emeka Nwosu"></div>
+      <div class="fgroup"><label>Email *</label><input type="email" id="ht-email" placeholder="you@example.com"></div>
+      <div class="fgroup"><label>Phone *</label><input type="tel" id="ht-phone" placeholder="+234 800 000 0000"></div>
+    </div>
+    <div class="fdiv">Hotel Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Destination *</label><input type="text" id="ht-dest" placeholder="Dubai, UAE"></div>
+      <div class="fgroup"><label>Check-in *</label><input type="date" id="ht-in"></div>
+      <div class="fgroup"><label>Check-out *</label><input type="date" id="ht-out"></div>
+    </div>
+    <div class="fg">
+      <div class="fgroup"><label>Rooms *</label><select id="ht-rooms"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4+">4+</option></select></div>
+      <div class="fgroup"><label>Guests *</label><select id="ht-guests"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5+">5+</option></select></div>
+      <div class="fgroup"><label>Room Type *</label><select id="ht-room"><option value="standard">Standard</option><option value="deluxe">Deluxe</option><option value="suite">Suite</option><option value="presidential">Presidential Suite</option></select></div>
+      <div class="fgroup"><label>Budget per Night *</label><select id="ht-budget"><option value="budget">Budget (under ₦30K)</option><option value="mid">Mid (₦30K–₦100K)</option><option value="luxury">Luxury (₦100K–₦300K)</option><option value="ultra">Ultra (₦300K+)</option></select></div>
+    </div>
+    <div class="fg full"><div class="fgroup"><label>Special Requests</label><textarea id="ht-notes" placeholder="Sea view, breakfast, accessible room…"></textarea></div></div>
+    <div class="sub-row"><button class="sub-btn" onclick="submitBooking('hotel')">Submit Request →</button><p class="fnote">Best options sent to your email<br>with confirmed availability.</p></div>
+    <div id="ht-alert" class="alert"></div>
+  </div>
+
+  <!-- TRANSFER -->
+  <div id="form-transfer" class="bform">
+    <div class="fdiv">Personal Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Full Name *</label><input type="text" id="tr-name" placeholder="e.g. Fatima Bello"></div>
+      <div class="fgroup"><label>Email *</label><input type="email" id="tr-email" placeholder="you@example.com"></div>
+      <div class="fgroup"><label>Phone *</label><input type="tel" id="tr-phone" placeholder="+234 800 000 0000"></div>
+    </div>
+    <div class="fdiv">Transfer Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Transfer Type *</label><select id="tr-type"><option value="airport-pickup">Airport Pickup</option><option value="airport-dropoff">Airport Drop-off</option><option value="city-transfer">City-to-City</option><option value="hourly">Hourly Charter</option></select></div>
+      <div class="fgroup"><label>Pickup Location *</label><input type="text" id="tr-pickup" placeholder="MMIA, Lagos"></div>
+      <div class="fgroup"><label>Drop-off Location *</label><input type="text" id="tr-dropoff" placeholder="Victoria Island, Lagos"></div>
+    </div>
+    <div class="fg">
+      <div class="fgroup"><label>Date *</label><input type="date" id="tr-date"></div>
+      <div class="fgroup"><label>Time *</label><input type="time" id="tr-time"></div>
+      <div class="fgroup"><label>Passengers *</label><select id="tr-pax"><option value="1-2">1–2</option><option value="3-4">3–4</option><option value="5-7">5–7</option><option value="8+">8+</option></select></div>
+      <div class="fgroup"><label>Vehicle Type *</label><select id="tr-vehicle"><option value="sedan">Sedan</option><option value="suv">SUV</option><option value="minivan">Minivan</option><option value="bus">Mini Bus</option></select></div>
+    </div>
+    <div class="fg">
+      <div class="fgroup"><label>Flight Number</label><input type="text" id="tr-flight" placeholder="e.g. QR0572"></div>
+      <div class="fgroup"><label>Notes</label><input type="text" id="tr-notes" placeholder="Child seat, extra luggage…"></div>
+    </div>
+    <div class="sub-row"><button class="sub-btn" onclick="submitBooking('transfer')">Submit Request →</button><p class="fnote">Driver details sent 2 hrs before<br>scheduled pickup.</p></div>
+    <div id="tr-alert" class="alert"></div>
+  </div>
+
+  <!-- TOUR -->
+  <div id="form-tour" class="bform">
+    <div class="fdiv">Personal Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Full Name *</label><input type="text" id="to-name" placeholder="e.g. Blessing Eze"></div>
+      <div class="fgroup"><label>Email *</label><input type="email" id="to-email" placeholder="you@example.com"></div>
+      <div class="fgroup"><label>Phone *</label><input type="tel" id="to-phone" placeholder="+234 800 000 0000"></div>
+    </div>
+    <div class="fdiv">Tour Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Tour Type *</label><select id="to-type"><option value="local">Local (Within Nigeria)</option><option value="africa">African Destinations</option><option value="international">International</option><option value="honeymoon">Honeymoon Package</option><option value="group">Group Tour</option><option value="corporate">Corporate Trip</option></select></div>
+      <div class="fgroup"><label>Destination / Country *</label><input type="text" id="to-dest" placeholder="Dubai, Maldives, Accra…"></div>
+      <div class="fgroup"><label>Travel Date *</label><input type="date" id="to-date"></div>
+    </div>
+    <div class="fg">
+      <div class="fgroup"><label>Duration (days) *</label><input type="number" id="to-days" placeholder="e.g. 7" min="1"></div>
+      <div class="fgroup"><label>Number of Travellers *</label><select id="to-pax"><option value="1">1</option><option value="2">2</option><option value="3-5">3–5</option><option value="6-10">6–10</option><option value="10+">10+</option></select></div>
+      <div class="fgroup"><label>Budget Range *</label><select id="to-budget"><option value="economy">Economy (under ₦200K/person)</option><option value="mid">Mid-range (₦200K–₦500K)</option><option value="premium">Premium (₦500K–₦1M)</option><option value="luxury">Luxury (₦1M+)</option></select></div>
+    </div>
+    <div class="fg full"><div class="fgroup"><label>Interests & Special Requests</label><textarea id="to-notes" placeholder="Beach, culture, adventure, dietary needs, accessibility requirements…"></textarea></div></div>
+    <div class="sub-row"><button class="sub-btn" onclick="submitBooking('tour')">Submit Request →</button><p class="fnote">A tailored itinerary will be sent<br>to you within 24 hours.</p></div>
+    <div id="to-alert" class="alert"></div>
+  </div>
+
+  <!-- PASSPORT -->
+  <div id="form-passport" class="bform">
+    <div class="fdiv">Personal Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Full Name *</label><input type="text" id="pp-name" placeholder="As it should appear on passport"></div>
+      <div class="fgroup"><label>Email *</label><input type="email" id="pp-email" placeholder="you@example.com"></div>
+      <div class="fgroup"><label>Phone *</label><input type="tel" id="pp-phone" placeholder="+234 800 000 0000"></div>
+    </div>
+    <div class="fdiv">Passport Request Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Request Type *</label><select id="pp-type"><option value="new">New Passport</option><option value="renewal">Renewal</option><option value="correction">Data Correction</option><option value="lost">Lost/Damaged Replacement</option><option value="minor">Minor's Passport</option></select></div>
+      <div class="fgroup"><label>Passport Booklet *</label><select id="pp-booklet"><option value="32">32-page (Standard)</option><option value="64">64-page (Frequent Traveller)</option></select></div>
+      <div class="fgroup"><label>Urgency *</label><select id="pp-urgency"><option value="standard">Standard Processing</option><option value="express">Express (faster)</option></select></div>
+    </div>
+    <div class="fg">
+      <div class="fgroup"><label>Date of Birth *</label><input type="date" id="pp-dob"></div>
+      <div class="fgroup"><label>State of Origin *</label><input type="text" id="pp-state" placeholder="e.g. Lagos"></div>
+      <div class="fgroup"><label>Current Passport No. (if renewal)</label><input type="text" id="pp-oldno" placeholder="A00000000"></div>
+    </div>
+    <div class="fg full"><div class="fgroup"><label>Additional Notes</label><textarea id="pp-notes" placeholder="Travel urgency, special circumstances, questions…"></textarea></div></div>
+    <div class="sub-row"><button class="sub-btn" onclick="submitBooking('passport')">Submit Request →</button><p class="fnote">Our team will call you within<br>30 mins to guide next steps.</p></div>
+    <div id="pp-alert" class="alert"></div>
+  </div>
+
+  <!-- CARGO -->
+  <div id="form-cargo" class="bform">
+    <div class="fdiv">Contact Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Full Name *</label><input type="text" id="cg-name" placeholder="e.g. Tobi Adeyemi"></div>
+      <div class="fgroup"><label>Email *</label><input type="email" id="cg-email" placeholder="you@example.com"></div>
+      <div class="fgroup"><label>Phone *</label><input type="tel" id="cg-phone" placeholder="+234 800 000 0000"></div>
+    </div>
+    <div class="fdiv">Shipment Details</div>
+    <div class="fg">
+      <div class="fgroup"><label>Service Type *</label><select id="cg-service"><option value="local">Local (within Lagos)</option><option value="interstate">Interstate (Nigeria)</option><option value="air-freight">International Air Freight</option><option value="sea-freight">International Sea Freight</option></select></div>
+      <div class="fgroup"><label>Origin *</label><input type="text" id="cg-origin" placeholder="Lagos Island, Lagos"></div>
+      <div class="fgroup"><label>Destination *</label><input type="text" id="cg-dest" placeholder="Kano / London / Dubai…"></div>
+    </div>
+    <div class="fg">
+      <div class="fgroup"><label>Pickup Date *</label><input type="date" id="cg-date"></div>
+      <div class="fgroup"><label>Cargo Type *</label><select id="cg-type"><option value="general">General Goods</option><option value="electronics">Electronics</option><option value="clothing">Clothing & Textiles</option><option value="food">Food & Perishables</option><option value="documents">Documents</option><option value="machinery">Machinery</option><option value="other">Other</option></select></div>
+      <div class="fgroup"><label>Weight (kg) *</label><input type="number" id="cg-weight" placeholder="e.g. 25" min="0.1" step="0.1"></div>
+      <div class="fgroup"><label>Dimensions (cm)</label><input type="text" id="cg-dims" placeholder="60 × 40 × 30"></div>
+    </div>
+    <div class="chk-row"><input type="checkbox" id="cg-fragile"><label for="cg-fragile">⚠️ Contains fragile items — handle with extra care</label></div>
+    <div class="fg full" style="margin-top:.8rem"><div class="fgroup"><label>Special Instructions</label><textarea id="cg-notes" placeholder="Insurance required, temperature-sensitive, customs documents available…"></textarea></div></div>
+    <div class="sub-row"><button class="sub-btn" onclick="submitBooking('cargo')">Submit Request →</button><p class="fnote">Quote & pickup schedule within<br>2 hours of submission.</p></div>
+    <div id="cg-alert" class="alert"></div>
+  </div>
+
+</section>
+
+<!-- DESTINATIONS -->
+<section class="dest-section" id="destinations">
+  <p class="sec-label">Top Picks</p>
+  <h2>Popular Destinations</h2>
+  <p class="sec-sub">Our most-booked routes — hand-picked for value, experience and affordability.</p>
+  <div class="dest-mosaic">
+    <div class="dest-tile tall"><img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80" alt="London"><div class="dest-info"><div class="dest-city">London</div><div class="dest-ctry">United Kingdom</div></div><div class="dest-price">From ₦850K</div></div>
+    <div class="dest-tile"><img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&q=80" alt="Dubai"><div class="dest-info"><div class="dest-city">Dubai</div><div class="dest-ctry">UAE</div></div><div class="dest-price">From ₦480K</div></div>
+    <div class="dest-tile"><img src="https://images.unsplash.com/photo-1543716091-a840c05249ec?w=600&q=80" alt="Istanbul"><div class="dest-info"><div class="dest-city">Istanbul</div><div class="dest-ctry">Turkey</div></div><div class="dest-price">From ₦520K</div></div>
+    <div class="dest-tile"><img src="https://images.unsplash.com/photo-1555952517-2e8e729e0b44?w=600&q=80" alt="New York"><div class="dest-info"><div class="dest-city">New York</div><div class="dest-ctry">USA</div></div><div class="dest-price">From ₦1.1M</div></div>
+    <div class="dest-tile"><img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80" alt="Paris"><div class="dest-info"><div class="dest-city">Paris</div><div class="dest-ctry">France</div></div><div class="dest-price">From ₦760K</div></div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-section">
+  <p class="sec-label">Why CozyFlights</p>
+  <h2>Travel with Confidence</h2>
+  <p class="sec-sub">We've been connecting Nigerians to the world. Here's what makes us different.</p>
+  <div class="why-grid">
+    <div class="why-card"><span class="why-icon">🎯</span><h4>Best Price Guarantee</h4><p>We match or beat any verified quote — no hidden charges, ever.</p></div>
+    <div class="why-card"><span class="why-icon">📞</span><h4>24/7 Support</h4><p>Available by phone, WhatsApp and in person at our Egbeda office.</p></div>
+    <div class="why-card"><span class="why-icon">🔒</span><h4>Secure Payments</h4><p>Bank transfer, card and USSD accepted. Receipts issued instantly.</p></div>
+    <div class="why-card"><span class="why-icon">🚀</span><h4>Fast Processing</h4><p>Flight tickets in 30 mins. Hotel vouchers and logistics in under 2 hrs.</p></div>
+    <div class="why-card"><span class="why-icon">📋</span><h4>Document Experts</h4><p>Passport applications handled with accuracy and speed — stress-free.</p></div>
+    <div class="why-card"><span class="why-icon">🤝</span><h4>Corporate Accounts</h4><p>Dedicated account managers for businesses with regular travel needs.</p></div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section">
+  <p class="sec-label">Testimonials</p>
+  <h2>What Our Clients Say</h2>
+  <p class="sec-sub">Real feedback from real travellers across Lagos and beyond.</p>
+  <div class="rev-grid">
+    <div class="rev-card"><div class="stars">★★★★★</div><p class="rev-text">"CozyFlights sorted my London visa trip package — flights, hotel and airport transfer all in one. I didn't have to stress about a single thing. Highly recommended!"</p><div class="reviewer"><div class="avi">AO</div><div><div class="rev-name">Adaobi Okonkwo</div><div class="rev-meta">Lagos Island · Business Traveller</div></div></div></div>
+    <div class="rev-card"><div class="stars">★★★★★</div><p class="rev-text">"Their passport renewal service is fantastic. I had been going back and forth on my own for months. CozyFlights sorted everything within a week. Very professional."</p><div class="reviewer"><div class="avi">KI</div><div><div class="rev-name">Kabiru Idris</div><div class="rev-meta">Abuja · First-Time Passport Holder</div></div></div></div>
+    <div class="rev-card"><div class="stars">★★★★★</div><p class="rev-text">"We use CozyFlights for all our company travel. The corporate account setup is seamless and the rates are unbeatable. Our go-to travel partners in Lagos."</p><div class="reviewer"><div class="avi">TB</div><div><div class="rev-name">Taiwo Badmus</div><div class="rev-meta">Ikeja · Corporate Client</div></div></div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="cta-section" id="contact">
+  <p class="sec-label">Get in Touch</p>
+  <h2>Ready to Travel?</h2>
+  <p>We're right here in Lagos — call, WhatsApp or walk in. Let's plan your perfect trip together.</p>
+  <a href="https://wa.me/2348066916948" class="btn btn-gold" target="_blank">💬 WhatsApp Us Now</a>
+  <div class="cta-grid">
+    <div class="cta-item"><span class="cta-item-icon">📞</span><div><div class="cta-item-label">Call Us</div><div class="cta-item-val"><a href="tel:+2348066916948">+234 806 691 6948</a></div></div></div>
+    <div class="cta-item"><span class="cta-item-icon">💬</span><div><div class="cta-item-label">WhatsApp</div><div class="cta-item-val"><a href="https://wa.me/2348066916948" target="_blank">08066916948</a></div></div></div>
+    <div class="cta-item"><span class="cta-item-icon">📧</span><div><div class="cta-item-label">Email</div><div class="cta-item-val"><a href="mailto:CozyFlightstravels@gmail.com">CozyFlightstravels@gmail.com</a></div></div></div>
+    <div class="cta-item"><span class="cta-item-icon">📍</span><div><div class="cta-item-label">Office Address</div><div class="cta-item-val">6, Karimu Laka, off Egbeda Bus Stop, Lagos</div></div></div>
+    <div class="cta-item"><span class="cta-item-icon">📸</span><div><div class="cta-item-label">Instagram</div><div class="cta-item-val"><a href="https://instagram.com/cozyflights_" target="_blank">@cozyflights_</a></div></div></div>
+    <div class="cta-item"><span class="cta-item-icon">🎵</span><div><div class="cta-item-label">TikTok</div><div class="cta-item-val"><a href="https://tiktok.com/@cozyflights1" target="_blank">@cozyflights1</a></div></div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo">Cozy<span>Flights</span> Travels</div>
+      <p class="ft-desc">Your trusted Lagos travel partner — flights, hotels, tours, passport assistance and logistics since 2013.</p>
+    </div>
+    <div class="ft-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#">Domestic Flights</a></li>
+        <li><a href="#">International Flights</a></li>
+        <li><a href="#">Hotel Reservations</a></li>
+        <li><a href="#">Airport Transfers</a></li>
+        <li><a href="#">Tour Packages</a></li>
+        <li><a href="#">Passport Assistance</a></li>
+        <li><a href="#">Cargo & Logistics</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="/admin">Admin Portal</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="tel:+2348066916948">+234 806 691 6948</a></li>
+        <li><a href="https://wa.me/2348066916948">WhatsApp Us</a></li>
+        <li><a href="mailto:CozyFlightstravels@gmail.com">CozyFlightstravels@gmail.com</a></li>
+        <li><a href="#">6, Karimu Laka, Egbeda, Lagos</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <span>© 2025 CozyFlights Travels. All rights reserved.</span>
+    <div class="socials">
+      <a class="soc" href="https://instagram.com/cozyflights_" target="_blank" aria-label="Instagram">IG</a>
+      <a class="soc" href="https://tiktok.com/@cozyflights1" target="_blank" aria-label="TikTok">TT</a>
+      <a class="soc" href="https://wa.me/2348066916948" target="_blank" aria-label="WhatsApp">WA</a>
+      <a class="soc" href="mailto:CozyFlightstravels@gmail.com" aria-label="Email">✉</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function switchTab(name, btn) {
+  document.querySelectorAll('.btab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bform').forEach(f => f.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('form-' + name).classList.add('active');
+  document.getElementById('book').scrollIntoView({behavior:'smooth'});
+}
+function openTab(name) {
+  const btn = [...document.querySelectorAll('.btab')].find(b => b.onclick.toString().includes("'"+name+"'"));
+  document.querySelectorAll('.btab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bform').forEach(f => f.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.getElementById('form-' + name).classList.add('active');
+  document.getElementById('book').scrollIntoView({behavior:'smooth'});
+}
+function toggleMenu(el){
+  const ul = document.querySelector('.nav-links');
+  const open = ul.style.display === 'flex';
+  ul.style.cssText = open ? '' : 'display:flex;flex-direction:column;position:fixed;top:64px;left:0;right:0;background:rgba(8,19,31,.98);padding:2rem 5%;gap:1.5rem;border-bottom:1px solid rgba(212,168,67,.15);z-index:199';
+}
+function val(id){return(document.getElementById(id)||{}).value||''}
+function checked(id){return(document.getElementById(id)||{}).checked||false}
+function showAlert(pre,type,html){const el=document.getElementById(pre+'-alert');el.className='alert '+type;el.innerHTML=html;el.scrollIntoView({behavior:'smooth',block:'nearest'})}
+
+async function submitBooking(service){
+  document.querySelectorAll('.sub-btn').forEach(b=>b.disabled=true);
+  let payload={},pre='',endpoint='';
+  if(service==='flight'){pre='fl';endpoint='/api/book/flight';payload={full_name:val('fl-name'),email:val('fl-email'),phone:val('fl-phone'),trip_type:val('fl-triptype'),from_city:val('fl-from'),to_city:val('fl-to'),departure_date:val('fl-dep'),return_date:val('fl-ret'),passengers:val('fl-pax'),cabin_class:val('fl-cabin'),special_requests:val('fl-notes')}}
+  else if(service==='hotel'){pre='ht';endpoint='/api/book/hotel';payload={full_name:val('ht-name'),email:val('ht-email'),phone:val('ht-phone'),destination:val('ht-dest'),check_in:val('ht-in'),check_out:val('ht-out'),rooms:val('ht-rooms'),guests:val('ht-guests'),room_type:val('ht-room'),budget_range:val('ht-budget'),special_requests:val('ht-notes')}}
+  else if(service==='transfer'){pre='tr';endpoint='/api/book/transfer';payload={full_name:val('tr-name'),email:val('tr-email'),phone:val('tr-phone'),transfer_type:val('tr-type'),pickup_location:val('tr-pickup'),dropoff_location:val('tr-dropoff'),pickup_date:val('tr-date'),pickup_time:val('tr-time'),passengers:val('tr-pax'),vehicle_type:val('tr-vehicle'),flight_number:val('tr-flight'),special_requests:val('tr-notes')}}
+  else if(service==='tour'){pre='to';endpoint='/api/book/tour';payload={full_name:val('to-name'),email:val('to-email'),phone:val('to-phone'),tour_type:val('to-type'),destination:val('to-dest'),travel_date:val('to-date'),duration_days:val('to-days'),passengers:val('to-pax'),budget_range:val('to-budget'),special_requests:val('to-notes')}}
+  else if(service==='passport'){pre='pp';endpoint='/api/book/passport';payload={full_name:val('pp-name'),email:val('pp-email'),phone:val('pp-phone'),request_type:val('pp-type'),booklet_type:val('pp-booklet'),urgency:val('pp-urgency'),date_of_birth:val('pp-dob'),state_of_origin:val('pp-state'),old_passport_no:val('pp-oldno'),special_requests:val('pp-notes')}}
+  else if(service==='cargo'){pre='cg';endpoint='/api/book/cargo';payload={full_name:val('cg-name'),email:val('cg-email'),phone:val('cg-phone'),service_type:val('cg-service'),origin:val('cg-origin'),destination:val('cg-dest'),pickup_date:val('cg-date'),cargo_type:val('cg-type'),weight_kg:val('cg-weight'),dimensions:val('cg-dims'),fragile:checked('cg-fragile'),special_requests:val('cg-notes')}}
+  try{
+    const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data=await res.json();
+    if(data.success){showAlert(pre,'success',`✅ <strong>Booking received!</strong> ${data.message}<br>Your reference: <span class="ref">${data.reference}</span><br>We'll contact you within 30 minutes via WhatsApp & email.`)}
+    else{showAlert(pre,'error','❌ '+(data.error||'Something went wrong. Please try again.'))}
+  }catch(e){showAlert(pre,'error','❌ Could not connect. Please WhatsApp us directly: <strong>08066916948</strong>')}
+  document.querySelectorAll('.sub-btn').forEach(b=>b.disabled=false);
+}
+
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}})},{threshold:.08});
+document.querySelectorAll('.svc-card,.rev-card,.dest-tile,.why-card').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(22px)';el.style.transition='opacity .6s ease,transform .6s ease';obs.observe(el)});
+</script>
+</body>
+</html>
